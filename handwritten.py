@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import cv2
 
 # Load the trained SVC model
-svc_model = joblib.load('svc_model.pkl')
+svc_model = joblib.load('model.pkl')
 
 # Define function to preprocess the image
 def preprocess_image(image):
