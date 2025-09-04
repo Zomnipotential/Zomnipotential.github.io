@@ -326,7 +326,7 @@
       list.innerHTML=''; list.appendChild(frag);
       $('#vCount').textContent = +localStorage.getItem('visits') || 0;
       $('#cCount').textContent = +localStorage.getItem('clicks') || 0;
-      $('#tCount').textContent = ($('#todos li').length || 0);
+      $('#tCount').textContent = ($$('#todos li').length || 0);
     }
     renderList();
     search.addEventListener('input', e=> renderList(e.target.value));
