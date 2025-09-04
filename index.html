@@ -1,15 +1,505 @@
-<h1>Hello World</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Interactive Webpage – Single File</title>
+  <style>
+    :root {
+      --bg: #0f1221;
+      --panel: #171a2b;
+      --text: #e9ecf1;
+      --muted: #a2a8be;
+      --brand: #7aa2ff;
+      --brand-2: #8ee3ff;
+      --ok: #2ecc71;
+      --warn: #f39c12;
+      --danger: #e74c3c;
+      --ring: rgba(122, 162, 255, 0.5);
+      --shadow: 0 10px 25px rgba(0,0,0,.25);
+    }
+    [data-theme="light"]{
+      --bg: #f8fafc;
+      --panel: #ffffff;
+      --text: #0f172a;
+      --muted: #475569;
+      --brand: #2563eb;
+      --brand-2: #06b6d4;
+      --ok: #16a34a;
+      --warn: #ca8a04;
+      --danger: #dc2626;
+      --ring: rgba(37, 99, 235, 0.4);
+      --shadow: 0 10px 25px rgba(2,6,23,.1);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font: 16px/1.45 system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background: var(--bg); color: var(--text);
+    }
+    .app{max-width:1200px; margin: 0 auto; padding: 24px}
+    header{
+      display:flex; align-items:center; gap:16px; justify-content:space-between; margin-bottom: 18px;
+    }
+    .brand{display:flex; align-items:center; gap:12px}
+    .logo{width:40px; height:40px; border-radius:12px; background: linear-gradient(135deg,var(--brand),var(--brand-2)); box-shadow: var(--shadow)}
+    h1{font-size: clamp(22px, 2.5vw, 28px); margin:0}
 
-<h4>Now I test it is really wokring to add new code to the existing file</h4>
-<h5>Now let us see if this one works faster now</h5>
-<h6>And this one?</h6>
-<h7>do we have h7 too?</h7>
+    .toolbar{display:flex; gap:8px; align-items:center}
+    button, .btn{
+      background: var(--panel); color: var(--text); border:1px solid rgba(255,255,255,.08);
+      padding: 10px 14px; border-radius:12px; cursor:pointer; transition:.2s ease; box-shadow: var(--shadow);
+    }
+    button:hover{transform: translateY(-1px); border-color: var(--brand)}
+    button[aria-pressed="true"]{outline:2px solid var(--ring)}
 
-I add this code here
+    .nav{display:flex; gap:8px; flex-wrap:wrap}
+    .nav button{background: transparent; border:1px dashed rgba(255,255,255,.15)}
+    .nav button.active{background: var(--brand); border-color:transparent; color:white}
 
-st.set_page_config(page_title="Handwritten Digit Recognition", page_icon="🧊", layout="centered", initial_sidebar_state="expanded")
-# ---- HEADER SECTION ----
-st.subheader("Handwritten Digit Recognition")
-st.title("Just take a picture of a digit and let the model predict it for you! 📸")
-st.write("This is a simple web app that recognizes handwritten digits using a Convolutional Neural Network (CNN).")
-st.write("[Learn more >](https://zomnipotential.github.io/)")
+    .grid{display:grid; gap:16px}
+    @media (min-width: 900px){
+      .grid.cols-3{grid-template-columns: 1.1fr 1fr 1fr}
+    }
+
+    .card{background: var(--panel); border:1px solid rgba(255,255,255,.06); border-radius:16px; padding:16px; box-shadow: var(--shadow)}
+    .card h3{margin:0 0 8px; font-size:18px}
+    .muted{color: var(--muted); font-size: 14px}
+    .row{display:flex; align-items:center; gap:12px; flex-wrap:wrap}
+    .grow{flex:1}
+    input, select, textarea{
+      width: 100%; padding:10px 12px; border-radius:12px; background: transparent; color: var(--text);
+      border:1px solid rgba(255,255,255,.12); outline:none;
+    }
+    input:focus, textarea:focus, select:focus{border-color: var(--brand); box-shadow: 0 0 0 4px var(--ring)}
+    label{display:block; font-weight:600; margin-bottom:6px}
+    small.hint{display:block; color:var(--muted); margin-top:6px}
+
+    .tag{display:inline-flex; align-items:center; gap:6px; padding:6px 10px; border-radius:999px; background: rgba(122,162,255,.12); border:1px solid rgba(122,162,255,.25)}
+
+    .gallery{display:grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap:12px}
+    .gallery img{width:100%; height:120px; object-fit:cover; border-radius:12px; cursor:zoom-in; border:1px solid rgba(255,255,255,.06)}
+
+    dialog{border:none; border-radius:16px; padding:0; width:min(720px, 92vw); background: var(--panel); color: var(--text)}
+    dialog::backdrop{background: rgba(0,0,0,.5)}
+    .modal-head{display:flex; align-items:center; justify-content:space-between; padding:12px 16px; border-bottom:1px solid rgba(255,255,255,.06)}
+    .modal-body{padding:16px}
+
+    .tabs{display:flex; gap:8px; margin-bottom:8px}
+    .tabs button{border:1px dashed rgba(255,255,255,.15)}
+    .tabs button.active{background: var(--brand); color:white; border-color:transparent}
+
+    .accordion details{background: var(--panel); border:1px solid rgba(255,255,255,.08); border-radius:12px; padding:8px 12px}
+    .accordion details+details{margin-top:10px}
+    .accordion summary{cursor:pointer; font-weight:600}
+
+    .toast{position: fixed; right: 20px; bottom:20px; background: var(--panel); border:1px solid rgba(255,255,255,.12); padding:10px 14px; border-radius:12px; box-shadow: var(--shadow); opacity:0; transform: translateY(8px); transition:.25s}
+    .toast.show{opacity:1; transform: translateY(0)}
+
+    .kbd{font-family: ui-monospace, SFMono-Regular, Menlo, monospace; background: rgba(255,255,255,.08); padding:2px 6px; border-radius:6px; border:1px solid rgba(255,255,255,.12)}
+
+    footer{margin-top:28px; color:var(--muted); font-size:14px}
+  </style>
+</head>
+<body>
+  <div class="app" id="app" data-theme="dark">
+    <header>
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <h1>Interactive Webpage Template</h1>
+          <div class="muted">A single-file, no-deps starter with common UI widgets.</div>
+        </div>
+      </div>
+      <div class="toolbar">
+        <span class="muted" title="Press / to focus search">Search</span>
+        <input id="q" placeholder="Type to filter items (/)" style="width: 240px" />
+        <button id="themeBtn" aria-pressed="false" title="Toggle theme (t)">🌗 Theme</button>
+        <button id="openAbout">❔ About</button>
+      </div>
+    </header>
+
+    <div class="nav" role="tablist" aria-label="Primary">
+      <button class="active" data-section="dashboard" role="tab" aria-selected="true">Dashboard</button>
+      <button data-section="gallery" role="tab" aria-selected="false">Gallery</button>
+      <button data-section="playground" role="tab" aria-selected="false">Playground</button>
+      <button data-section="contact" role="tab" aria-selected="false">Contact</button>
+    </div>
+
+    <!-- DASHBOARD -->
+    <section id="dashboard" class="grid cols-3" aria-labelledby="Dashboard">
+      <div class="card">
+        <h3>Quick Stats</h3>
+        <div class="row">
+          <span class="tag">Visitors <strong id="vCount">0</strong></span>
+          <span class="tag">Clicks <strong id="cCount">0</strong></span>
+          <span class="tag">Tasks <strong id="tCount">0</strong></span>
+        </div>
+        <small class="hint">Counts are persisted in <code>localStorage</code>.</small>
+      </div>
+
+      <div class="card">
+        <h3>Mini Chart</h3>
+        <canvas id="chart" height="140"></canvas>
+        <small class="hint">Data updates on form submit in Contact.</small>
+      </div>
+
+      <div class="card">
+        <h3>Tips</h3>
+        <ul>
+          <li>Press <span class="kbd">/</span> to focus search</li>
+          <li>Press <span class="kbd">t</span> to toggle theme</li>
+          <li>Use the tabs above to switch sections</li>
+        </ul>
+      </div>
+
+      <div class="card" style="grid-column: 1 / -1">
+        <h3>Filterable List</h3>
+        <div id="list" class="row" style="flex-wrap:wrap"></div>
+      </div>
+    </section>
+
+    <!-- GALLERY -->
+    <section id="gallery" hidden>
+      <div class="card">
+        <h3>Image Gallery</h3>
+        <div class="gallery" id="galleryGrid"></div>
+        <small class="hint">Click an image to open a modal preview.</small>
+      </div>
+    </section>
+
+    <!-- PLAYGROUND -->
+    <section id="playground" hidden>
+      <div class="grid">
+        <div class="card">
+          <h3>Tabs</h3>
+          <div class="tabs" role="tablist">
+            <button class="active" data-tab="one">One</button>
+            <button data-tab="two">Two</button>
+            <button data-tab="three">Three</button>
+          </div>
+          <div id="tab-one">Tab One Content ✨</div>
+          <div id="tab-two" hidden>Tab Two Content 🧪</div>
+          <div id="tab-three" hidden>Tab Three Content 🧩</div>
+        </div>
+
+        <div class="card">
+          <h3>Todo</h3>
+          <form id="todoForm" class="row" autocomplete="off">
+            <input id="todoInput" placeholder="Add a task and press Enter" required />
+            <button>Add</button>
+          </form>
+          <ul id="todos"></ul>
+        </div>
+
+        <div class="card">
+          <h3>Accordion</h3>
+          <div class="accordion">
+            <details open>
+              <summary>What is this?</summary>
+              <p>A small, dependency-free playground demonstrating common UI elements.</p>
+            </details>
+            <details>
+              <summary>How do I customize?</summary>
+              <p>Edit text, colors (CSS variables), and scripts in this single file.</p>
+            </details>
+            <details>
+              <summary>Can I persist data?</summary>
+              <p>Yes. The demo uses <code>localStorage</code> for small things like settings and counts.</p>
+            </details>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" hidden>
+      <div class="grid">
+        <div class="card">
+          <h3>Contact Form</h3>
+          <form id="contactForm" novalidate>
+            <div class="row">
+              <div class="grow">
+                <label for="name">Name</label>
+                <input id="name" name="name" placeholder="Ada Lovelace" required minlength="2" />
+                <small class="hint" id="nameErr" hidden>Name must be at least 2 characters.</small>
+              </div>
+              <div class="grow">
+                <label for="email">Email</label>
+                <input id="email" name="email" type="email" placeholder="ada@computing.org" required />
+                <small class="hint" id="emailErr" hidden>Enter a valid email address.</small>
+              </div>
+            </div>
+            <label for="topic">Topic</label>
+            <select id="topic" name="topic">
+              <option>General</option>
+              <option>Feedback</option>
+              <option>Support</option>
+            </select>
+            <label for="msg">Message</label>
+            <textarea id="msg" name="msg" rows="5" placeholder="Write something nice…" required></textarea>
+            <small class="hint" id="msgErr" hidden>Message is required.</small>
+            <div class="row" style="margin-top:10px">
+              <button type="submit">Send</button>
+              <button type="reset">Reset</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="card">
+          <h3>Live Preview</h3>
+          <pre id="preview" style="white-space: pre-wrap; margin:0">Fill the form to see a preview here.</pre>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      Built with vanilla HTML/CSS/JS. No frameworks. Ship as a single file or drop into any project.
+    </footer>
+  </div>
+
+  <!-- ABOUT MODAL -->
+  <dialog id="about">
+    <div class="modal-head">
+      <strong>About this template</strong>
+      <button id="closeAbout" aria-label="Close">✖</button>
+    </div>
+    <div class="modal-body">
+      <p>This is a clean, modern starter that demonstrates common interactivity:</p>
+      <ul>
+        <li>Theme toggle with persistence</li>
+        <li>Tabs, accordion, modal, filterable list</li>
+        <li>Form validation + live preview</li>
+        <li>Canvas chart with tiny animation</li>
+        <li>Keyboard shortcuts (<span class="kbd">/</span>, <span class="kbd">t</span>)</li>
+      </ul>
+      <p>Customize freely — it’s all here in one file.</p>
+    </div>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    const $ = (s, r=document) => r.querySelector(s);
+    const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
+
+    // ---------- Theme toggle ----------
+    const app = $('#app');
+    const themeBtn = $('#themeBtn');
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    app.dataset.theme = savedTheme;
+    themeBtn.setAttribute('aria-pressed', savedTheme === 'dark' ? 'false' : 'true');
+    themeBtn.addEventListener('click', () => toggleTheme());
+    document.addEventListener('keydown', (e) => { if(e.key.toLowerCase()==='t') toggleTheme(); });
+    function toggleTheme(){
+      const next = app.dataset.theme === 'dark' ? 'light' : 'dark';
+      app.dataset.theme = next; localStorage.setItem('theme', next);
+      themeBtn.setAttribute('aria-pressed', next==='dark' ? 'false' : 'true');
+      toast(`Theme: ${next}`);
+    }
+
+    // ---------- Tabs / Sections ----------
+    const sections = ['dashboard','gallery','playground','contact'];
+    $$('.nav button').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        $$('.nav button').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        const name = btn.dataset.section;
+        sections.forEach(id=>{ const el = $('#'+id); el.hidden = id!==name; });
+        btn.setAttribute('aria-selected','true');
+      })
+    })
+
+    // ---------- Search & Filterable list ----------
+    const search = $('#q');
+    const items = 'alpha,bravo,charlie,delta,echo,foxtrot,golf,hotel,india,juliet,kilo,lima,mike,november,oscar,papa,quebec,romeo,sierra,tango,uniform,victor,whiskey,x-ray,yankee,zulu'.split(',');
+    const list = $('#list');
+    function renderList(q=''){
+      const qlc = q.trim().toLowerCase();
+      const frag = document.createDocumentFragment();
+      items.filter(s=>!qlc || s.includes(qlc)).forEach(word=>{
+        const b = document.createElement('button');
+        b.className='btn'; b.textContent=word; b.addEventListener('click',()=> incClicks());
+        frag.appendChild(b);
+      });
+      list.innerHTML=''; list.appendChild(frag);
+      $('#vCount').textContent = +localStorage.getItem('visits') || 0;
+      $('#cCount').textContent = +localStorage.getItem('clicks') || 0;
+      $('#tCount').textContent = ($('#todos li').length || 0);
+    }
+    renderList();
+    search.addEventListener('input', e=> renderList(e.target.value));
+    document.addEventListener('keydown', (e)=>{ if(e.key === '/') { e.preventDefault(); search.focus(); } });
+
+    // ---------- Counters ----------
+    localStorage.setItem('visits', (+localStorage.getItem('visits')||0)+1);
+    function incClicks(){ localStorage.setItem('clicks', (+localStorage.getItem('clicks')||0)+1); renderList(search.value); }
+
+    // ---------- Gallery ----------
+    const gallery = $('#galleryGrid');
+    const pics = [
+      'https://images.unsplash.com/photo-1519681393784-d120267933ba',
+      'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee',
+      'https://images.unsplash.com/photo-1518779578993-ec3579fee39f',
+      'https://images.unsplash.com/photo-1520975922284-7b683db242d2',
+      'https://images.unsplash.com/photo-1520975693410-001d487e0a1e',
+      'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429'
+    ];
+    const about = $('#about');
+    const openAbout = $('#openAbout');
+    const closeAbout = $('#closeAbout');
+    openAbout.addEventListener('click', ()=> about.showModal());
+    closeAbout.addEventListener('click', ()=> about.close());
+
+    function buildGallery(){
+      const frag = document.createDocumentFragment();
+      pics.forEach(src=>{
+        const img = document.createElement('img');
+        img.src = src + '?auto=format&fit=crop&w=800&q=60';
+        img.alt = 'Gallery image';
+        img.addEventListener('click', ()=>{
+          const d = document.createElement('dialog');
+          d.innerHTML = `<div class="modal-head"><strong>Preview</strong><button aria-label="Close">✖</button></div><div class="modal-body"><img style="width:100%;height:auto;border-radius:12px" src="${src}?auto=format&fit=crop&w=1600&q=70" alt="Preview"/></div>`;
+          document.body.appendChild(d);
+          d.showModal();
+          d.querySelector('button').addEventListener('click', ()=>{ d.close(); d.remove(); });
+          d.addEventListener('click', (e)=>{ if(e.target===d){ d.close(); d.remove(); } });
+        })
+        frag.appendChild(img);
+      });
+      gallery.innerHTML=''; gallery.appendChild(frag);
+    }
+    buildGallery();
+
+    // ---------- Tabs (Playground) ----------
+    $$('#playground .tabs button').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        $$('#playground .tabs button').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        const tab = btn.dataset.tab;
+        $('#tab-one').hidden = tab !== 'one';
+        $('#tab-two').hidden = tab !== 'two';
+        $('#tab-three').hidden = tab !== 'three';
+      });
+    });
+
+    // ---------- Todo (Playground) ----------
+    const todoForm = $('#todoForm');
+    const todoInput = $('#todoInput');
+    const todos = $('#todos');
+    const savedTodos = JSON.parse(localStorage.getItem('todos')||'[]');
+    savedTodos.forEach(addTodoEl);
+
+    todoForm.addEventListener('submit', (e)=>{
+      e.preventDefault();
+      const text = (todoInput.value||'').trim();
+      if(!text) return;
+      savedTodos.push({text, done:false});
+      localStorage.setItem('todos', JSON.stringify(savedTodos));
+      addTodoEl({text, done:false});
+      todoInput.value='';
+      renderList(search.value);
+      toast('Task added');
+    });
+
+    function addTodoEl(item){
+      const li = document.createElement('li');
+      li.style.display='flex'; li.style.alignItems='center'; li.style.gap='8px'; li.style.margin='6px 0';
+      const cb = document.createElement('input');
+      cb.type='checkbox'; cb.checked=item.done;
+      const span = document.createElement('span'); span.textContent = item.text; span.style.flex='1';
+      const del = document.createElement('button'); del.textContent='Delete';
+      cb.addEventListener('change', ()=>{
+        item.done = cb.checked; localStorage.setItem('todos', JSON.stringify(savedTodos));
+        span.style.textDecoration = cb.checked ? 'line-through' : 'none';
+      });
+      del.addEventListener('click', ()=>{
+        const i = savedTodos.indexOf(item); if(i>-1){ savedTodos.splice(i,1); localStorage.setItem('todos', JSON.stringify(savedTodos)); li.remove(); renderList(search.value); toast('Task removed'); }
+      });
+      span.style.textDecoration = item.done ? 'line-through' : 'none';
+      li.append(cb, span, del); todos.appendChild(li);
+    }
+
+    // ---------- Contact Form + Live Preview ----------
+    const form = $('#contactForm');
+    const preview = $('#preview');
+    form.addEventListener('input', updatePreview);
+    form.addEventListener('submit', (e)=>{
+      e.preventDefault();
+      const valid = validate();
+      if(!valid) { toast('Please fix form errors', 'warn'); return; }
+      toast('Message sent! (demo)');
+      // Update chart data on submit just to show interaction
+      pushChartSample();
+      form.reset(); updatePreview();
+    });
+
+    function validate(){
+      const name = $('#name'); const email = $('#email'); const msg = $('#msg');
+      const ne = $('#nameErr'); const ee = $('#emailErr'); const me = $('#msgErr');
+      let ok = true;
+      if(name.value.trim().length < 2){ ne.hidden = false; ok=false; } else ne.hidden = true;
+      if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email.value.trim())){ ee.hidden = false; ok=false; } else ee.hidden = true;
+      if(!msg.value.trim()){ me.hidden = false; ok=false; } else me.hidden = true;
+      return ok;
+    }
+
+    function updatePreview(){
+      const data = new FormData(form);
+      const obj = Object.fromEntries(data.entries());
+      preview.textContent = JSON.stringify(obj, null, 2) || 'Fill the form to see a preview here.';
+    }
+
+    // ---------- Toast ----------
+    const toastEl = $('#toast');
+    let toastTimer;
+    function toast(text, type='info'){
+      toastEl.textContent = text;
+      toastEl.style.borderColor = type==='warn' ? 'var(--warn)' : type==='danger' ? 'var(--danger)' : 'rgba(255,255,255,.12)';
+      toastEl.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(()=> toastEl.classList.remove('show'), 1800);
+    }
+
+    // ---------- Mini Canvas Chart ----------
+    const ctx = $('#chart').getContext('2d');
+    const chartData = JSON.parse(localStorage.getItem('chartData')||'[5,9,7,12,8,6,10]');
+    function drawChart(){
+      const W = ctx.canvas.width = ctx.canvas.clientWidth;
+      const H = ctx.canvas.height;
+      ctx.clearRect(0,0,W,H);
+      const max = Math.max(...chartData, 12);
+      const barW = Math.max(20, (W - 20) / chartData.length - 10);
+      chartData.forEach((v,i)=>{
+        const h = Math.round((v/max) * (H-20));
+        const x = 10 + i*(barW+10);
+        const y = H - h - 10;
+        // bar
+        const g = ctx.createLinearGradient(0,y,0,y+h);
+        g.addColorStop(0, getComputedStyle(app).getPropertyValue('--brand'));
+        g.addColorStop(1, getComputedStyle(app).getPropertyValue('--brand-2'));
+        ctx.fillStyle = g;
+        ctx.fillRect(x,y,barW,h);
+        // value
+        ctx.fillStyle = getComputedStyle(app).getPropertyValue('--text');
+        ctx.font = '12px system-ui';
+        ctx.globalAlpha = .8; ctx.fillText(v, x+4, y-4); ctx.globalAlpha = 1;
+      });
+    }
+    function pushChartSample(){
+      const n = Math.round(4 + Math.random()*12);
+      chartData.push(n); if(chartData.length>10) chartData.shift();
+      localStorage.setItem('chartData', JSON.stringify(chartData));
+      drawChart();
+    }
+    window.addEventListener('resize', drawChart);
+    drawChart();
+
+    // Accessibility: close about on Escape
+    document.addEventListener('keydown', (e)=>{
+      if(e.key==='Escape' && about.open) about.close();
+    })
+  </script>
+</body>
+</html>
